@@ -1,8 +1,4 @@
-﻿  Hero.cpp
-  Object.cpp
-  Widget.cpp
-  팀프로젝트.cpp
-C:\Users\copit\OneDrive\바탕 화면\박준범\팀프로젝트_최종\팀프로젝트.cpp(42,19): warning C4244: 'return': 'WPARAM'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Users\copit\OneDrive\바탕 화면\박준범\팀프로젝트_최종\팀프로젝트.cpp(46,15): warning C4244: '인수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  코드를 생성하고 있습니다...
+﻿  팀프로젝트.cpp
+C:\Users\copit\OneDrive\바탕 화면\박준범\팀프로젝트_최종\팀프로젝트.cpp(46,19): warning C4244: 'return': 'WPARAM'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\copit\OneDrive\바탕 화면\박준범\팀프로젝트_최종\팀프로젝트.cpp(50,15): warning C4244: '인수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   팀프로젝트.vcxproj -> C:\Users\copit\OneDrive\바탕 화면\박준범\팀프로젝트_최종\x64\Debug\팀프로젝트.exe

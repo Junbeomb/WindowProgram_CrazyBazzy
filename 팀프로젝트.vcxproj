@@ -139,14 +139,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Boss.cpp" />
     <ClCompile Include="Hero.cpp" />
+    <ClCompile Include="MonsterClass.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Widget.cpp" />
     <ClCompile Include="팀프로젝트.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Boss.h" />
     <ClInclude Include="globals.h" />
     <ClInclude Include="Hero.h" />
+    <ClInclude Include="MonsterClass.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Widget.h" />
   </ItemGroup>

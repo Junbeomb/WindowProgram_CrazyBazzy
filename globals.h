@@ -211,12 +211,3 @@ typedef struct {
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lPARAM);
 
-
-
-
-void DrawMonster(HDC, MONSTER, MONSPRITE);
-void DrawBoss(HDC hDC, BOSS snowBoss, BOSSSPRITE bs);
-void DrawBossSkill4(HDC hDC, BOSS snowBoss, BOSSSPRITE bs);
-void DrawBossSkill3(HDC hDC, BOSS snowBoss, BOSSSPRITE bs);
-void DrawBossSkill2(HDC hDC, BOSS snowBoss, BOSSSPRITE bs);
-void DrawBossSkill1(HDC hDC, BOSS snowBoss, BOSSSPRITE bs);
