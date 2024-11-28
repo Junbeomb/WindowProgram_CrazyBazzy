@@ -1,9 +1,5 @@
 #include "Widget.h"
 
-Widget::Widget() {
-
-};
-
 void Widget::DrawCursor(HDC memDC, POINT cur, HBITMAP cursor)
 {
     HDC  tempDC = CreateCompatibleDC(memDC);
@@ -11,7 +7,7 @@ void Widget::DrawCursor(HDC memDC, POINT cur, HBITMAP cursor)
     TransparentBlt(memDC, cur.x, cur.y, 33, 36, tempDC, 0, 0, 33, 36, RGB(100, 100, 100));
     DeleteObject(tempDC);
 }
-void Widget::DrawHeart(HDC hDC, HERO hero, BOSS snowBoss, OBJSPRITE os) {
+void Widget::DrawHeart(HDC hDC, HERO hero, Boss snowBoss, OBJSPRITE os) {
     HDC tempDC = CreateCompatibleDC(hDC);
     SelectObject(tempDC, os.heart);
     if (hero.life == 0) {
@@ -25,7 +21,7 @@ void Widget::DrawHeart(HDC hDC, HERO hero, BOSS snowBoss, OBJSPRITE os) {
     if (hero.life >= 3)
         TransparentBlt(hDC, 100, 700, 50, 50, tempDC, 0, 0, 500, 400, RGB(0, 0, 0));
 
-    if (snowBoss.life <= 0 && currentStage == 3 || (currentStage == 1 && diecount == 8) || (currentStage == 2 && diecount == 10)) {
+    if (snowBoss.GetLife() <= 0 && currentStage == 3 || (currentStage == 1 && diecount == 8) || (currentStage == 2 && diecount == 10)) {
         SelectObject(tempDC, os.win);
         TransparentBlt(hDC, 400, 300, 400, 200, tempDC, 0, 0, 600, 300, RGB(0, 0, 0));
     }

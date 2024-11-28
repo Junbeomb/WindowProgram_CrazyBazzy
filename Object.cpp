@@ -1,6 +1,6 @@
 #include "Object.h"
-
-Object::Object() {};
+#include "Hero.h"
+#include "Sprite.h"
 
 void Object::DrawBoard(HDC hDC, HBITMAP map)
 {
@@ -10,110 +10,74 @@ void Object::DrawBoard(HDC hDC, HBITMAP map)
     BitBlt(hDC, 0, 0, 1200, 800, tempDC, 0, 0, SRCCOPY);
     DeleteObject(tempDC);
 }
-void Object::DrawObjectUP(HDC hDC, OBJECT object[150], OBJSPRITE os, HERO hero)
+
+void Object::DrawObjectUP(HDC hDC, Sprite& sprite, Hero& hero)
 {
     HDC tempDC = CreateCompatibleDC(hDC);
-    for (int i = 0; i < 150; i++)
+    if (y + 40 <= hero.heroY && shouldDraw)
     {
-        if (object[i].y + 40 <= hero.heroY && object[i].shouldDraw)
+        switch (type)
         {
-            switch (object[i].type)
-            {
-            case TREE:
-                SelectObject(tempDC, os.tree);
-                TransparentBlt(hDC, object[i].x, object[i].y - 30, 40, 70, tempDC, 0, 0, 40, 70, RGB(100, 100, 100));
-                break;
-            case HOUSE1:
-                SelectObject(tempDC, os.redHouse);
-                TransparentBlt(hDC, object[i].x, object[i].y - 13, 40, 53, tempDC, 0, 0, 40, 53, RGB(100, 100, 100));
-                break;
-            case HOUSE2:
-                SelectObject(tempDC, os.yellowHouse);
-                TransparentBlt(hDC, object[i].x, object[i].y - 13, 40, 53, tempDC, 0, 0, 40, 53, RGB(100, 100, 100));
-                break;
-            case HOUSE3:
-                SelectObject(tempDC, os.blueHouse);
-                TransparentBlt(hDC, object[i].x, object[i].y - 13, 40, 53, tempDC, 0, 0, 40, 53, RGB(100, 100, 100));
-                break;
-            case BLOCK1:
-                SelectObject(tempDC, os.redBlock);
-                TransparentBlt(hDC, object[i].x, object[i].y - 4, 40, 44, tempDC, 0, 0, 40, 44, RGB(100, 100, 100));
-                break;
-            case BLOCK2:
-                SelectObject(tempDC, os.yellowBlock);
-                TransparentBlt(hDC, object[i].x, object[i].y - 4, 40, 44, tempDC, 0, 0, 40, 44, RGB(100, 100, 100));
-                break;
-            }
+        case TREE:
+            SelectObject(tempDC, sprite.tree);
+            TransparentBlt(hDC, x, y - 30, 40, 70, tempDC, 0, 0, 40, 70, RGB(100, 100, 100));
+            break;
+        case HOUSE1:
+            SelectObject(tempDC, sprite.redHouse);
+            TransparentBlt(hDC, x, y - 13, 40, 53, tempDC, 0, 0, 40, 53, RGB(100, 100, 100));
+            break;
+        case HOUSE2:
+            SelectObject(tempDC, sprite.yellowHouse);
+            TransparentBlt(hDC, x, y - 13, 40, 53, tempDC, 0, 0, 40, 53, RGB(100, 100, 100));
+            break;
+        case HOUSE3:
+            SelectObject(tempDC, sprite.blueHouse);
+            TransparentBlt(hDC, x, y - 13, 40, 53, tempDC, 0, 0, 40, 53, RGB(100, 100, 100));
+            break;
+        case BLOCK1:
+            SelectObject(tempDC, sprite.redBlock);
+            TransparentBlt(hDC, x, y - 4, 40, 44, tempDC, 0, 0, 40, 44, RGB(100, 100, 100));
+            break;
+        case BLOCK2:
+            SelectObject(tempDC, sprite.yellowBlock);
+            TransparentBlt(hDC, x, y - 4, 40, 44, tempDC, 0, 0, 40, 44, RGB(100, 100, 100));
+            break;
         }
-
     }
     DeleteObject(tempDC);
 }
-void Object::DrawObjectDOWN(HDC hDC, OBJECT object[150], OBJSPRITE os, HERO hero) {
+void Object::DrawObjectDOWN(HDC hDC, Sprite& sprite, Hero& hero) {
     HDC tempDC = CreateCompatibleDC(hDC);
-    for (int i = 0; i < 150; i++)
-    {
-        if (object[i].y + 40 > hero.heroY && object[i].shouldDraw)
+        if (y + 40 > hero.heroY && shouldDraw)
         {
-            switch (object[i].type)
+            switch (type)
             {
             case TREE:
-                SelectObject(tempDC, os.tree);
-                TransparentBlt(hDC, object[i].x, object[i].y - 30, 40, 70, tempDC, 0, 0, 40, 70, RGB(100, 100, 100));
+                SelectObject(tempDC, sprite.tree);
+                TransparentBlt(hDC, x, y - 30, 40, 70, tempDC, 0, 0, 40, 70, RGB(100, 100, 100));
                 break;
             case HOUSE1:
-                SelectObject(tempDC, os.redHouse);
-                TransparentBlt(hDC, object[i].x, object[i].y - 13, 40, 53, tempDC, 0, 0, 40, 53, RGB(100, 100, 100));
+                SelectObject(tempDC, sprite.redHouse);
+                TransparentBlt(hDC, x, y - 13, 40, 53, tempDC, 0, 0, 40, 53, RGB(100, 100, 100));
                 break;
             case HOUSE2:
-                SelectObject(tempDC, os.yellowHouse);
-                TransparentBlt(hDC, object[i].x, object[i].y - 13, 40, 53, tempDC, 0, 0, 40, 53, RGB(100, 100, 100));
+                SelectObject(tempDC, sprite.yellowHouse);
+                TransparentBlt(hDC, x, y - 13, 40, 53, tempDC, 0, 0, 40, 53, RGB(100, 100, 100));
                 break;
             case HOUSE3:
-                SelectObject(tempDC, os.blueHouse);
-                TransparentBlt(hDC, object[i].x, object[i].y - 13, 40, 53, tempDC, 0, 0, 40, 53, RGB(100, 100, 100));
+                SelectObject(tempDC, sprite.blueHouse);
+                TransparentBlt(hDC, x, y - 13, 40, 53, tempDC, 0, 0, 40, 53, RGB(100, 100, 100));
                 break;
             case BLOCK1:
-                SelectObject(tempDC, os.redBlock);
-                TransparentBlt(hDC, object[i].x, object[i].y - 4, 40, 44, tempDC, 0, 0, 40, 44, RGB(100, 100, 100));
+                SelectObject(tempDC, sprite.redBlock);
+                TransparentBlt(hDC, x, y - 4, 40, 44, tempDC, 0, 0, 40, 44, RGB(100, 100, 100));
                 break;
             case BLOCK2:
-                SelectObject(tempDC, os.yellowBlock);
-                TransparentBlt(hDC, object[i].x, object[i].y - 4, 40, 44, tempDC, 0, 0, 40, 44, RGB(100, 100, 100));
+                SelectObject(tempDC, sprite.yellowBlock);
+                TransparentBlt(hDC, x, y - 4, 40, 44, tempDC, 0, 0, 40, 44, RGB(100, 100, 100));
                 break;
             }
         }
-
-    }
-    DeleteObject(tempDC);
-}
-void Object::DrawItem(HDC hDC, ITEM item[100], HBITMAP hBitmap)
-{
-    HDC tempDC = CreateCompatibleDC(hDC);
-    SelectObject(tempDC, hBitmap);
-    for (int i = 0; i < 100; i++)
-    {
-        if (item[i].shouldDraw)
-        {
-            switch (item[i].type)
-            {
-            case SPEED:
-                TransparentBlt(hDC, item[i].x - 5, item[i].y - 5, 40, 50, tempDC, 0, 0, 40, 50, RGB(100, 100, 100));
-                break;
-            case BALLOON:
-                TransparentBlt(hDC, item[i].x - 5, item[i].y - 5, 40, 50, tempDC, 80, 0, 40, 50, RGB(100, 100, 100));
-                break;
-            case POTION:
-                TransparentBlt(hDC, item[i].x - 5, item[i].y - 5, 40, 50, tempDC, 40, 0, 40, 50, RGB(100, 100, 100));
-                break;
-            case MAXPOTION:
-                TransparentBlt(hDC, item[i].x - 5, item[i].y - 5, 40, 50, tempDC, 120, 0, 40, 50, RGB(100, 100, 100));
-                break;
-            default:
-                break;
-            }
-        }
-    }
     DeleteObject(tempDC);
 }
 

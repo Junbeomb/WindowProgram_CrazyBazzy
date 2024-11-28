@@ -2,11 +2,17 @@
 #include "globals.h"
 class Object
 {
+
+	int type;//옵젝 종류(집이나 나무, 블록)
+	int x, y;
+	bool shouldDraw;
+
+
 public:
-	Object();
 	void DrawBoard(HDC, HBITMAP);
-	void DrawItem(HDC hDC, ITEM item[100], HBITMAP hBitmap);
-	void DrawObjectUP(HDC hDC, OBJECT object[150], OBJSPRITE os, HERO hero);
-	void DrawObjectDOWN(HDC hDC, OBJECT object[150], OBJSPRITE os, HERO hero);
+
+	void DrawObjectUP(HDC hDC, class Sprite&, class Hero&);
+	void DrawObjectDOWN(HDC hDC, class Sprite&, class  Hero&);
+
 };
 
