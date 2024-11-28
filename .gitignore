@@ -1,1 +1,8 @@
-.vs
+.vs/
+BMP/
+x64/
+팀프로젝트/
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
