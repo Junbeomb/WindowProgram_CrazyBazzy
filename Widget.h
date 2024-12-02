@@ -4,8 +4,8 @@
 class Widget
 {
 public:
-	void DrawCursor(HDC memDC, POINT cur, HBITMAP cursor);
-	void DrawHeart(HDC hDC, HERO hero, class Boss snowBoss, OBJSPRITE os);
-	void DrawSkillIcon(HDC hDC, HERO hero, OBJSPRITE os);
+	void DrawCursor(HDC memDC, POINT cur, Sprite sprite);
+	void DrawHeart(HDC hDC, class Hero hero, class Boss snowBoss, class Sprite os);
+	void DrawSkillIcon(HDC hDC, class Hero hero, class Sprite os);
 };
 

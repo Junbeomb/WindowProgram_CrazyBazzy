@@ -1,4 +1,5 @@
 #include "Item.h"
+#include "Sprite.h"
 
 void Item::DrawItem(HDC hDC)
 {

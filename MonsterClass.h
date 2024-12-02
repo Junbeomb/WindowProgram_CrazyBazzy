@@ -4,9 +4,7 @@ class MonsterClass
 {
 
 public:
-    MonsterClass(HBITMAP& h) : sprite{ h } {};
-    HBITMAP sprite;
-
+    
     int xPos, yPos;
     int direction;
     int status;

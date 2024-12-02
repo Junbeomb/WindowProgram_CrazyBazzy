@@ -143,6 +143,7 @@
     <ClCompile Include="Bubble.cpp" />
     <ClCompile Include="Hero.cpp" />
     <ClCompile Include="Item.cpp" />
+    <ClCompile Include="Map.cpp" />
     <ClCompile Include="MonsterClass.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Sprite.cpp" />
@@ -155,6 +156,7 @@
     <ClInclude Include="globals.h" />
     <ClInclude Include="Hero.h" />
     <ClInclude Include="Item.h" />
+    <ClInclude Include="Map.h" />
     <ClInclude Include="MonsterClass.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Sprite.h" />

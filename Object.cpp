@@ -2,19 +2,10 @@
 #include "Hero.h"
 #include "Sprite.h"
 
-void Object::DrawBoard(HDC hDC, HBITMAP map)
-{
-    HDC tempDC = CreateCompatibleDC(hDC);
-
-    SelectObject(tempDC, map);
-    BitBlt(hDC, 0, 0, 1200, 800, tempDC, 0, 0, SRCCOPY);
-    DeleteObject(tempDC);
-}
-
 void Object::DrawObjectUP(HDC hDC, Sprite& sprite, Hero& hero)
 {
     HDC tempDC = CreateCompatibleDC(hDC);
-    if (y + 40 <= hero.heroY && shouldDraw)
+    if (y + 40 <= hero.heroY)
     {
         switch (type)
         {

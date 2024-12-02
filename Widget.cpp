@@ -1,24 +1,27 @@
 #include "Widget.h"
+#include "Hero.h"
+#include "Boss.h"
+#include "Sprite.h"
 
-void Widget::DrawCursor(HDC memDC, POINT cur, HBITMAP cursor)
+void Widget::DrawCursor(HDC memDC, POINT cur, Sprite sprite)
 {
     HDC  tempDC = CreateCompatibleDC(memDC);
-    SelectObject(tempDC, cursor);
+    SelectObject(tempDC, sprite.cursor);
     TransparentBlt(memDC, cur.x, cur.y, 33, 36, tempDC, 0, 0, 33, 36, RGB(100, 100, 100));
     DeleteObject(tempDC);
 }
-void Widget::DrawHeart(HDC hDC, HERO hero, Boss snowBoss, OBJSPRITE os) {
+void Widget::DrawHeart(HDC hDC, Hero hero, Boss snowBoss, Sprite os) {
     HDC tempDC = CreateCompatibleDC(hDC);
     SelectObject(tempDC, os.heart);
-    if (hero.life == 0) {
+    if (hero.GetLife() == 0) {
         SelectObject(tempDC, os.lose);
         TransparentBlt(hDC, 400, 300, 400, 200, tempDC, 0, 0, 400, 200, RGB(255, 255, 255));
     }
-    if (hero.life >= 1)
+    if (hero.GetLife() >= 1)
         TransparentBlt(hDC, 20, 700, 50, 50, tempDC, 0, 0, 500, 400, RGB(0, 0, 0));
-    if (hero.life >= 2)
+    if (hero.GetLife() >= 2)
         TransparentBlt(hDC, 60, 700, 50, 50, tempDC, 0, 0, 500, 400, RGB(0, 0, 0));
-    if (hero.life >= 3)
+    if (hero.GetLife() >= 3)
         TransparentBlt(hDC, 100, 700, 50, 50, tempDC, 0, 0, 500, 400, RGB(0, 0, 0));
 
     if (snowBoss.GetLife() <= 0 && currentStage == 3 || (currentStage == 1 && diecount == 8) || (currentStage == 2 && diecount == 10)) {
@@ -28,7 +31,7 @@ void Widget::DrawHeart(HDC hDC, HERO hero, Boss snowBoss, OBJSPRITE os) {
 
     DeleteObject(tempDC);
 }
-void Widget::DrawSkillIcon(HDC hDC, HERO hero, OBJSPRITE os) {
+void Widget::DrawSkillIcon(HDC hDC, Hero hero, Sprite os) {
     HDC tempDC = CreateCompatibleDC(hDC);
     if (hero.skillX.coolTime == 0) {//쿨타임 없을때
         SelectObject(tempDC, os.heroSkillIcon);
