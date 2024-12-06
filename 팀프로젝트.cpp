@@ -10,10 +10,9 @@
 #include "Map.h"
 
 
-Widget widgetH;
+Widget widget;
 
 Boss bossH;
-
 vector<Object> objects;
 vector<MonsterClass> monsters;
 vector<Item> items;
@@ -77,10 +76,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
     static int bubbleCount;
 
     //스테이지용
-    static int objCount;
     static int itemCount;
     static bool itemUPDOWN;
-
     static int stageChangeCount;
 
     switch (iMsg) {
@@ -99,6 +96,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
         memDC = CreateCompatibleDC(hDC);
         hBitmap = CreateCompatibleBitmap(hDC, rectView.right, rectView.bottom);
         oldBitmap = (HBITMAP)SelectObject(memDC, hBitmap);
+
         //그리기 시작
         switch (currentStage)
         {
@@ -123,7 +121,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
             for (int i = 0; i < bubbles.size(); ++i) {
                 bubbles[i].DrawBubble(memDC,hero,sprite);
             }
-            widgetH.DrawHeart(memDC, hero, bossH, sprite);
+            widget.DrawHeart(memDC, hero, bossH, sprite);
             break;
         case 2:
             map.DrawBoard(memDC, sprite.map2);
@@ -143,23 +141,23 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
             for (int i = 0; i < bubbles.size(); ++i) {
                 bubbles[i].DrawBubble(memDC, hero, sprite);
             }
-            widgetH.DrawHeart(memDC, hero, bossH, sprite);
+            widget.DrawHeart(memDC, hero, bossH, sprite);
             break;
         case 3:
             map.DrawBoard(memDC, sprite.bossMap);
-            bossH.DrawBossSkill3(memDC, bossH.bs);
-            bossH.DrawBoss(memDC, bossH.bs);
-            bossH.DrawBossSkill2(memDC, bossH.bs);
-            bossH.DrawBossSkill4(memDC, bossH.bs);
+           /* bossH.DrawBossSkill3(memDC, sprite);
+            bossH.DrawBoss(memDC, sprite);
+            bossH.DrawBossSkill2(memDC, sprite);
+            bossH.DrawBossSkill4(memDC, sprite);
             hero.DrawHero(memDC);
-            bossH.DrawBossSkill1(memDC, bossH.bs);
+            bossH.DrawBossSkill1(memDC, sprite);
             RoundRect(memDC, 8, 8, 1132, 32, 5, 5);
             hBrush = CreateSolidBrush(RGB(255, 0, 0));
             oldBrush = (HBRUSH)SelectObject(memDC, hBrush);
             RoundRect(memDC, 10, 10, 10 + bossH.GetLife() * 28, 30, 5, 5);
             SelectObject(memDC, oldBrush);
             DeleteObject(hBrush);
-            DeleteObject(oldBrush);
+            DeleteObject(oldBrush);*/
             for (int i = 0; i < items.size(); ++i) {
                 items[i].DrawItem(memDC);
             }
@@ -167,13 +165,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
                 bubbles[i].DrawBubble(memDC, hero, sprite);
             }
 
-            widgetH.DrawHeart(memDC, hero, bossH, sprite);
-            widgetH.DrawSkillIcon(memDC, hero, sprite);
+            widget.DrawHeart(memDC, hero, bossH, sprite);
+            widget.DrawSkillIcon(memDC, hero, sprite);
             break;
         default:
             break;
         }
-        widgetH.DrawCursor(memDC, cur, sprite);
+        widget.DrawCursor(memDC, cur, sprite);
         BitBlt(hDC, 0, 0, rectView.right, rectView.bottom, memDC, 0, 0, SRCCOPY);
         SelectObject(memDC, oldBitmap);
         DeleteObject(memDC);
@@ -210,7 +208,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
             }
 
             //보스랑 히어로 충돌
-            if (sqrt(pow((hero.heroX - (bossH.GetxPos() + 125)), 2) + pow(((hero.heroY) - (bossH.GetyPos() + 125)), 2)) < 130 && bossH.GetLife() > 0) {
+            if (sqrt(pow((hero.X - (bossH.GetxPos() + 125)), 2) + pow(((hero.Y) - (bossH.GetyPos() + 125)), 2)) < 130 && bossH.GetLife() > 0) {
                 hero.SetLife(hero.GetLife() - 1);
                 hero.status = 2;
             }
@@ -218,7 +216,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
             //skill4몬스터랑 히어로 충돌
             for (int i = 0; i < BOSS_MONSTER_MAX; i++) {
                 if (bossH.skill4.mon[i].status == 1 && bossH.skill4.mon[i].count > 35) {
-                    if (sqrt(pow((hero.heroX - (bossH.skill4.mon[i].xPos + 50)), 2) + pow(((hero.heroY) - (bossH.skill4.mon[i].yPos + 50)), 2)) < 40 ) {
+                    if (sqrt(pow((hero.X - (bossH.skill4.mon[i].X + 50)), 2) + pow(((hero.Y) - (bossH.skill4.mon[i].Y + 50)), 2)) < 40 ) {
                         hero.SetLife(hero.GetLife() - 1);
                         hero.status = 2;
                         break;
@@ -230,19 +228,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
             if (hero.status != 10) {//대쉬가 아닐때만
                 if (GetAsyncKeyState(VK_UP)) {
                     hero.direction = UP;
-                    hero.heroY -= hero.GetSpeed();
+                    hero.Y -= hero.GetSpeed();
                 }
                 else if (GetAsyncKeyState(VK_LEFT)) {
                     hero.direction = LEFT;
-                    hero.heroX -= hero.GetSpeed();
+                    hero.X -= hero.GetSpeed();
                 }
                 else if (GetAsyncKeyState(VK_DOWN)) {
                     hero.direction = DOWN;
-                    hero.heroY += hero.GetSpeed();
+                    hero.Y += hero.GetSpeed();
                 }
                 else if (GetAsyncKeyState(VK_RIGHT)) {
                     hero.direction = RIGHT;
-                    hero.heroX += hero.GetSpeed();
+                    hero.X += hero.GetSpeed();
                 }
             }
             else if (hero.status == 10) {
@@ -252,16 +250,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
                     hero.dashCoolTime = 30;
                 }
                 if (hero.direction == LEFT) {
-                    hero.heroX -= 10;
+                    hero.X -= 10;
                 }
                 else if (hero.direction == RIGHT) {
-                    hero.heroX += 10;
+                    hero.X += 10;
                 }
                 else if (hero.direction == UP) {
-                    hero.heroY -= 10;
+                    hero.Y -= 10;
                 }
                 else if (hero.direction == DOWN) {
-                    hero.heroY += 10;
+                    hero.Y += 10;
                 }
             }
             //X공격
@@ -293,22 +291,22 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
             hero.resurrectionCount++;
             if (GetAsyncKeyState(VK_UP)) {
                 hero.direction = UP;
-                hero.heroY -= hero.GetSpeed();
+                hero.Y -= hero.GetSpeed();
             }
             else if (GetAsyncKeyState(VK_LEFT))
             {
                 hero.direction = LEFT;
-                hero.heroX -= hero.GetSpeed();
+                hero.X -= hero.GetSpeed();
             }
             else if (GetAsyncKeyState(VK_DOWN))
             {
                 hero.direction = DOWN;
-                hero.heroY += hero.GetSpeed();
+                hero.Y += hero.GetSpeed();
             }
             else if (GetAsyncKeyState(VK_RIGHT))
             {
                 hero.direction = RIGHT;
-                hero.heroX += hero.GetSpeed();
+                hero.X += hero.GetSpeed();
             }
             if (hero.resurrectionCount > 100) {
                 hero.status = 0;
@@ -319,28 +317,26 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
 
 
         //화면밖으로 나가지 못하게하는 충돌처리
-        if (hero.heroX < 20)hero.heroX = 20;
-        if (hero.heroX > 1140)hero.heroX = 1140;
-        if (hero.heroY < 20)hero.heroY = 20;
-        if (hero.heroY > 740)hero.heroY = 740;
+        if (hero.X < 20)hero.X = 20;
+        if (hero.X > 1140)hero.X = 1140;
+        if (hero.Y < 20)hero.Y = 20;
+        if (hero.Y > 740)hero.Y = 740;
 
         //장애물 충돌 확인
         for (int i = 0; i < objects.size(); ++i) {
-            if (objects[i].x<hero.heroX + 18 && 
-                objects[i].y<hero.heroY + 18 && 
-                objects[i].x + 40>hero.heroX - 18 && 
-                objects[i].y + 40>hero.heroY - 18){
+            if (objects[i].x<hero.X + 18 && 
+                objects[i].y<hero.Y + 18 && 
+                objects[i].x + 40>hero.X - 18 && 
+                objects[i].y + 40>hero.Y - 18){
 
                 //이전 위치로
-                hero.heroX = hero.beforeX;
-                hero.heroY = hero.beforeY;
+                hero.X = hero.beforeX;
+                hero.Y = hero.beforeY;
             }
         }
 
-        
-
-        hero.beforeX = hero.heroX;
-        hero.beforeY = hero.heroY;
+        hero.beforeX = hero.X;
+        hero.beforeY = hero.Y;
 
         
         for (int i = 0; i < bubbles.size(); i++) { //주인공 일반 공격
@@ -387,10 +383,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
                 for (int j = 0; j < BOSS_MONSTER_MAX; j++) { 
                     if (bossH.skill4.mon[j].status == 1 && bossH.skill4.mon[j].count>35) { 
                         if (not bubbles[i].GetBigBubble() && 
-                            bubbles[i].GetX() > bossH.skill4.mon[j].xPos && 
-                            bubbles[i].GetX() < bossH.skill4.mon[j].xPos + 100 && 
-                            bubbles[i].GetY() - 15 > bossH.skill4.mon[j].yPos && 
-                            bubbles[i].GetY() - 15 < bossH.skill4.mon[j].yPos + 100) {
+                            bubbles[i].GetX() > bossH.skill4.mon[j].X && 
+                            bubbles[i].GetX() < bossH.skill4.mon[j].X + 100 && 
+                            bubbles[i].GetY() - 15 > bossH.skill4.mon[j].Y && 
+                            bubbles[i].GetY() - 15 < bossH.skill4.mon[j].Y + 100) {
 
                             bubbles[i].SetStatus(2);
                             bubbles[i].SetDieCount(30);
@@ -398,10 +394,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
                             break;
                         }
                         else if (bubbles[i].GetBigBubble() && 
-                            bubbles[i].GetX() > bossH.skill4.mon[j].xPos && 
-                            bubbles[i].GetX() < bossH.skill4.mon[j].xPos + 100 && 
-                            bubbles[i].GetY() - 15 > bossH.skill4.mon[j].yPos && 
-                            bubbles[i].GetY() - 15 < bossH.skill4.mon[j].yPos + 100) {
+                            bubbles[i].GetX() > bossH.skill4.mon[j].X && 
+                            bubbles[i].GetX() < bossH.skill4.mon[j].X + 100 && 
+                            bubbles[i].GetY() - 15 > bossH.skill4.mon[j].Y && 
+                            bubbles[i].GetY() - 15 < bossH.skill4.mon[j].Y + 100) {
 
                             bossH.skill4.mon[j].life--;
                             break;
@@ -410,19 +406,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
                 }
                 //몬스터와 충돌
                 for (int j = 0; j < monsters.size(); j++) { 
-                    if (monsters[j].status == 0) {
-                        if (bubbles[i].GetStatus() == 1 &&
-                            bubbles[i].GetX() < monsters[j].xPos + 50 &&
-                            bubbles[i].GetX() > monsters[j].xPos && 
-                            bubbles[i].GetY() < monsters[j].yPos + 60 && 
-                            bubbles[i].GetY() > monsters[j].yPos) {
-
-                            bubbles[i].SetStatus(2); //bubble 터지는 중
-                            bubbles[i].SetDieCount(30);
-                            monsters[j].life--;
-                            if (monsters[j].life == 0)
-                                diecount++;
-                        }
+                    if (monsters[j].status != 0) continue;
+                    
+                    if (monsters[j].CollisionCheck(bubbles[i].GetX(), bubbles[i].GetY(), 50, 60)) {
+                        bubbles[i].SetStatus(2); //bubble 터지는 중
+                        bubbles[i].SetDieCount(30);
+                        monsters[j].Damaged();
                     }
                 }
 
@@ -437,11 +426,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
                     if (objects[j].x<bubbles[i].GetX() + 5 && objects[j].y<bubbles[i].GetY() + 5 && objects[j].x + 40>bubbles[i].GetX() - 5 && objects[j].y + 40>bubbles[i].GetY() - 5) {
                         bubbles[i].SetStatus(2);//bubble 터지는 중
                         bubbles[i].SetDieCount(30);
+                        Item tItem;
                         switch (objects[j].GetType())
                         {
                         case BLOCK1:
                         case BLOCK2:
-                            Item tItem;
                             tItem.x = objects[j].x;
                             tItem.y = objects[j].y;
                             tItem.SetType(rand() % 4 + 1);
@@ -524,10 +513,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
 
 
 
-        //아이템 먹었는지 확인하는 부분
+        //아이템 습득
         for (int i = 0; i < items.size(); i++)
         {
-            if (items[i].x<hero.heroX + 20 && items[i].y<hero.heroY + 20 && items[i].x + 40>hero.heroX - 20 && items[i].y + 40>hero.heroY - 20)
+            if (items[i].x<hero.X + 20 && items[i].y<hero.Y + 20 && items[i].x + 40>hero.X - 20 && items[i].y + 40>hero.Y - 20)
             {
 
                 switch (items[i].GetType()) {
@@ -551,60 +540,35 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
             }
         }
 
-        if (currentStage == 1)
-        {
-            for (int j = 0; j < monsters.size(); j++) {
-                if (monsters[j].life == 0) continue;
+        //몬스터 이동
+        for (int j = 0; j < monsters.size(); j++) {
+            //animation
+            monsters[j].anicount++;
+            if (monsters[j].anicount >= monsters[j].aniSpeed * 4) { //aniSpeed가 100일 때는 400
+                monsters[j].anicount = 0;
+            }
 
-                monsters[j].locatecount++;
-                monsters[j].anicount++;
-
-                if (monsters[j].anicount >= 4)
-                    monsters[j].anicount = 0;
-
-                if (monsters[j].status == 0) { //살아있을 때
-                //count20마다 방향 전환
-                    if (monsters[j].locatecount != 0 && monsters[j].locatecount % 20 == 0) {
-                        int directionRandom = rand() % 2;
-                        if (directionRandom == 0)
-                            monsters[j].direction = RIGHT;
-                        else if (directionRandom == 1) {
-                            monsters[j].direction = LEFT;
-                        }
-                    }
-                    if (monsters[j].direction == LEFT) { //방향
-                        monsters[j].xPos -= 5;
-                        if (monsters[j].xPos <= 0) {
-                            monsters[j].direction = RIGHT;
-                        }
-                    }
-                    else if (monsters[j].direction == RIGHT) {
-                        monsters[j].xPos += 5;
-                        if (monsters[j].xPos + 130 >= MAP_ROW) {
-                            monsters[j].direction = LEFT;
-                        }
-                    }
-                    if (hero.status == 0) {//배찌가 살아있을 때
-                        if (hero.heroX  < monsters[j].xPos + 50 && hero.heroX > monsters[j].xPos && hero.heroY  < monsters[j].yPos + 55 && hero.heroY > monsters[j].yPos) {
-                            hero.SetLife(hero.GetLife() - 1);
-                            hero.status = 2;//배찌 사망중
-                        }
-                    }
-                }
-                if (monsters[j].life == 0) {
-                    monsters[j].status = 1; //몬스터 처치
-                    monsters[j].xPos += 0;
+            if (monsters[j].status == 0) { //살아있을 때
+                monsters[j].Move();
+                if (hero.status == ALIVE && monsters[j].CollisionCheck(hero.X,hero.Y,50,55)) hero.Damaged();
+            }
+            else if (monsters[j].status == 1) {//죽는 중
+                monsters[j].dieCount++;
+                if (monsters[j].dieCount >= 200) {
+                    monsters.erase(monsters.begin() + j);
+                    --j;
                 }
             }
-            if (currentStage == 1&&diecount==8) 
-            {
+
+        }
+        //스테이지 변경
+        if (monsters.empty()) {
+            if (currentStage == 1) {
                 stageChangeCount++;
-                if (stageChangeCount == 200)
-                {
+                //2초 동안 win 로고 나오게
+                if (stageChangeCount == 200) {
                     currentStage = 2;
-                    diecount = 0;
                     stageChangeCount = 0;
-                    objCount = 0;
 
                     objects.clear();
 
@@ -644,7 +608,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
 
                         monsters.push_back(tMon);
                     }
-           
+
                     monsters[0].xPos = 75;
                     monsters[1].xPos = 155;
                     monsters[2].xPos = 235;
@@ -656,159 +620,109 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
                     monsters[8].xPos = 955;
                     monsters[9].xPos = 1035;
 
-                    hero.heroX = 14 * 40 + 20;
-                    hero.heroY = 10 * 40 - 20;
+                    hero.X = 14 * 40 + 20;
+                    hero.Y = 10 * 40 - 20;
                 }
             }
-            
-        }
-        if (currentStage == 2) {
-            for (int j = 0; j < monsters.size(); j++) {
-                if (monsters[j].life == 0) continue;
-                monsters[j].locatecount++;
+            else if(currentStage == 2){
+                stageChangeCount++;
+                if (stageChangeCount == 200) {
+                    currentStage = 3;
+                    stageChangeCount = 0;
 
-                monsters[j].anicount++;
-                if (monsters[j].anicount >= 4)
-                    monsters[j].anicount = 0;
+                    objects.clear();
 
-                if (monsters[j].status == 0) { //살아있을 때
-                //count20마다 방향 전환
-                    if (monsters[j].locatecount != 0 && monsters[j].locatecount % 20 == 0) {
-                        int directionRandom = rand() % 2;
-                        if (directionRandom == 0)
-                            monsters[j].direction = UP;
-                        else if (directionRandom == 1) {
-                            monsters[j].direction = DOWN;
-                        }
-                    }
-                    if (monsters[j].direction == UP) { //방향
-                        monsters[j].yPos -= 5;
-                        if (monsters[j].yPos <= 0) {
-                            monsters[j].direction = DOWN;
-                        }
-                    }
-                    else if (monsters[j].direction == DOWN) {
-                        monsters[j].yPos += 5;
-                        if (monsters[j].yPos + 130 >= MAP_COL) {
-                            monsters[j].direction = UP;
-                        }
-                    }
-                    if (hero.status == 0) {//배찌가 살아있을 때
-                        if (hero.heroX < monsters[j].xPos + 50 && hero.heroX > monsters[j].xPos && hero.heroY < monsters[j].yPos + 55 && hero.heroY > monsters[j].yPos) {
-                            hero.SetLife(hero.GetLife() - 1);
-                            hero.status = 2;//배찌 사망중
+                    hero.X = 14 * 40 + 20;
+                    hero.Y = 18 * 40 - 20;
 
-                        }
-                    }
-                }
-                if (monsters[j].life == 0) {
-                    monsters[j].status = 1; //몬스터 처치
-                    monsters[j].xPos += 0;
-                }
-                if (currentStage == 2 && diecount == 10)
-                {
-                    stageChangeCount++;
-                    if (stageChangeCount == 200)
+                    for (int i = 0; i < 10; i++)
                     {
-                        currentStage = 3;
-                        diecount = 0;
-                        stageChangeCount = 0;
-                        objCount = 0;
-                        
-                        objects.clear();
-
-                        hero.heroX = 14 * 40 + 20;
-                        hero.heroY = 18 * 40 - 20;
-
-                        for (int i = 0; i < 10; i++)
-                        {
-                            Item tItem;
-                            tItem.SetXY(3 * i * 40, 17 * 40);
-                            tItem.sprite = sprite.items;
-                            switch (i) {
-                                case 0:case 1:case 2:
-                                    tItem.SetType(SPEED);
-                                    break;
-                                case 3:case 4:
-                                    tItem.SetType(MAXPOTION);
-                                    break;
-                                case 5:case 6:
-                                    tItem.SetType(POTION);
-                                    break;
-                                case 7:case 8:case 9:
-                                    tItem.SetType(BALLOON);
-                                    break;
-                            }
-                            items.push_back(tItem);
+                        Item tItem;
+                        tItem.SetXY(3 * i * 40, 17 * 40);
+                        tItem.sprite = sprite.items;
+                        switch (i) {
+                        case 0:case 1:case 2:
+                            tItem.SetType(SPEED);
+                            break;
+                        case 3:case 4:
+                            tItem.SetType(MAXPOTION);
+                            break;
+                        case 5:case 6:
+                            tItem.SetType(POTION);
+                            break;
+                        case 7:case 8:case 9:
+                            tItem.SetType(BALLOON);
+                            break;
                         }
-
-
-                        bossH.SetxPos(600);
-                        bossH.SetyPos(0);
-                        bossH.SetLife(40);
-                        bossH.SetDirection(DEFAULT);
-                        bossH.SetStatus(0);
-                        bossH.SetCount(0);
-                        bossH.SetSpriteCount(0);
-                        bossH.SetSkillMotionSpriteCount(0);
-                        bossH.SetShouldDraw(true);
-
-                        for (int i = 0; i < SKILL1NUMBER; i++) {
-                            bossH.skill1[i].skill1Toggle = 0;
-                            bossH.skill1[i].skill1Count = 0;
-                            bossH.skill1[i].skill1SpriteCount = 0;
-                            bossH.skill1[i].skill1Xpos = -1000;
-                            bossH.skill1[i].skill1Ypos = -1000;
-                            bossH.skill1[i].skill1Direction = 0;
-                            bossH.skill1[i].skill1DeadCount = 0;
-                        }
-                        bossH.skill2.skill2Toggle = 0;
-                        bossH.skill2.skill2Count = 0;
-                        bossH.skill2.skill2SpriteCount = 0;
-                        bossH.skill2.skill2SpreadCount = 0;
-                        bossH.skill2.skill2BombSpriteCount = 0;
-                        for (int i = 0; i < 4; i++) {
-                            bossH.skill2.skill2Xpos[i] = -1000;
-                            bossH.skill2.skill2Ypos[i] = -1000;
-                        }
-                        bossH.skill3.skill3Toggle = 0;
-                        bossH.skill3.skill3Count = 0;
-                        bossH.skill3.skill3SpriteCount = 0;
-                        bossH.skill3.skill3SpreadCount = 0;
-                        bossH.skill3.skill3BombSpriteCount = 0;
-                        for (int i = 0; i < BOSS_MONSTER_MAX; i++) {
-                            bossH.skill4.mon[i].count = 0;
-                            bossH.skill4.mon[i].status = 0;
-                            bossH.skill4.mon[i].life = 0;
-                            bossH.skill4.mon[i].xPos = -1000;
-                            bossH.skill4.mon[i].yPos = -1000;
-                        }
-
-                        itemCount = 0;
+                        items.push_back(tItem);
                     }
 
+
+                    bossH.SetxPos(600);
+                    bossH.SetyPos(0);
+                    bossH.SetLife(40);
+                    bossH.SetDirection(DEFAULT);
+                    bossH.SetStatus(0);
+                    bossH.SetCount(0);
+                    bossH.SetSpriteCount(0);
+                    bossH.SetSkillMotionSpriteCount(0);
+                    bossH.SetShouldDraw(true);
+
+                    for (int i = 0; i < SKILL1NUMBER; i++) {
+                        bossH.skill1[i].skill1Toggle = 0;
+                        bossH.skill1[i].skill1Count = 0;
+                        bossH.skill1[i].skill1SpriteCount = 0;
+                        bossH.skill1[i].skill1Xpos = -1000;
+                        bossH.skill1[i].skill1Ypos = -1000;
+                        bossH.skill1[i].skill1Direction = 0;
+                        bossH.skill1[i].skill1DeadCount = 0;
+                    }
+                    bossH.skill2.skill2Toggle = 0;
+                    bossH.skill2.skill2Count = 0;
+                    bossH.skill2.skill2SpriteCount = 0;
+                    bossH.skill2.skill2SpreadCount = 0;
+                    bossH.skill2.skill2BombSpriteCount = 0;
+                    for (int i = 0; i < 4; i++) {
+                        bossH.skill2.skill2Xpos[i] = -1000;
+                        bossH.skill2.skill2Ypos[i] = -1000;
+                    }
+                    bossH.skill3.skill3Toggle = 0;
+                    bossH.skill3.skill3Count = 0;
+                    bossH.skill3.skill3SpriteCount = 0;
+                    bossH.skill3.skill3SpreadCount = 0;
+                    bossH.skill3.skill3BombSpriteCount = 0;
+                    for (int i = 0; i < BOSS_MONSTER_MAX; i++) {
+                        bossH.skill4.mon[i].count = 0;
+                        bossH.skill4.mon[i].status = 0;
+                        bossH.skill4.mon[i].life = 0;
+                        bossH.skill4.mon[i].X = -1000;
+                        bossH.skill4.mon[i].Y = -1000;
+                    }
+
+                    itemCount = 0;
                 }
             }
-
         }
+
+
         //보스
         if (currentStage == 3){
-            bossH.BossAlgorithm();
+            //bossH.BossAlgorithm();
         }
 
-        if (hero.GetLife() == 0 && GetAsyncKeyState(VK_RETURN)) {
-            currentStage = 0;
-        }
-        if (currentStage == 3 && bossH.GetLife() && GetAsyncKeyState(VK_RETURN)) {
-            currentStage = 0;
-        }
+        //if (hero.GetLife() == 0 && GetAsyncKeyState(VK_RETURN)) {
+        //    currentStage = 0;
+        //}
+        //if (currentStage == 3 && bossH.GetLife() && GetAsyncKeyState(VK_RETURN)) {
+        //    currentStage = 0;
+        //}
         InvalidateRect(hWnd, NULL, false);
         break;
     case WM_KEYDOWN:
         if (wParam == VK_SPACE) {
             Bubble tBubble;
             tBubble.SetStatus(1); //날라가는 중.
-            tBubble.SetXY(hero.heroX, hero.heroY);
+            tBubble.SetXY(hero.X, hero.Y);
             tBubble.SetDirection(hero.direction);
             bubbles.push_back(tBubble);
         }
@@ -849,7 +763,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
 
             Bubble tBubble;
             tBubble.SetStatus(1);
-            tBubble.SetXY(hero.heroX,hero.heroY);
+            tBubble.SetXY(hero.X,hero.Y);
             tBubble.SetDirection(hero.direction);
             tBubble.SetBigBubble(true);
 
@@ -872,12 +786,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
                 hero.status = ALIVE;
                 hero.direction = 0;
                 hero.spriteCount = 0;
-                objCount = 0;
+
                 hero.SetLife(3);
                 hero.dieCount = 0;
                 hero.resurrectionCount = 0;
 
-                for (int i = 0; i < 7; ++i) {
+                for (int i = 0; i < 8; ++i) {
                     MonsterClass tMon;
                     tMon.xPos = (rand() % 1180);
                     tMon.life = 3;
@@ -895,23 +809,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam) {
                 monsters[5].yPos = 490;
                 monsters[6].yPos = 600;
                 monsters[7].yPos = 650;
-                for (int j = 0; j < 29; j++)
-                {
-                    for (int k = 2; k < 19; k += 4)
-                    {
+
+                for (int j = 0; j < 29; j++) {
+                    for (int k = 2; k < 19; k += 4) {
                         if (j == 0 && (k == 2 || k == 10 || k == 18)) continue;
                         else if (j == 28 && (k == 6 || k == 14)) continue;
-
                         Object tObject;
                         tObject.SetType(rand() % 6 + 1);
                         tObject.SetXY(j * 40, k * 40);
                         objects.push_back(tObject);
-
                     }
                 }
-
-                hero.heroX = 1140;
-                hero.heroY = 60;
+                hero.X = 1140;
+                hero.Y = 60;
                 stageChangeCount = 0;
             }
             if (LOWORD(lParam) > 125 && LOWORD(lParam) < 405 && HIWORD(lParam) > 134 && HIWORD(lParam) < 220)

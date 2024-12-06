@@ -5,7 +5,7 @@
 void Object::DrawObjectUP(HDC hDC, Sprite& sprite, Hero& hero)
 {
     HDC tempDC = CreateCompatibleDC(hDC);
-    if (y + 40 <= hero.heroY)
+    if (y + 40 <= hero.Y)
     {
         switch (type)
         {
@@ -39,7 +39,7 @@ void Object::DrawObjectUP(HDC hDC, Sprite& sprite, Hero& hero)
 }
 void Object::DrawObjectDOWN(HDC hDC, Sprite& sprite, Hero& hero) {
     HDC tempDC = CreateCompatibleDC(hDC);
-        if (y + 40 > hero.heroY && shouldDraw)
+        if (y + 40 > hero.Y)
         {
             switch (type)
             {

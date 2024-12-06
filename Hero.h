@@ -32,7 +32,7 @@ public:
     void SetLife(int l) { life = l; }
 
 
-    int heroX{}, heroY{};//캐릭터 좌표
+    int X{}, Y{};//캐릭터 좌표
     int beforeX{}, beforeY{}; //이전 프레임 위치
 
     int direction{};//보고 있는 방향
@@ -45,6 +45,7 @@ public:
     
 
 	void DrawHero(HDC hDC);
+    void Damaged();
 
 };
 

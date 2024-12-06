@@ -4,9 +4,8 @@
 class Boss
 {
 
-
     typedef struct {
-        int xPos, yPos;
+        int X, Y;
         int status;
         int life;
         int direction;
@@ -30,13 +29,13 @@ class Boss
     int bossrdCount{};
 
 public:
-    void DrawBoss(HDC hDC, bossSprite bs);
-    void DrawBossSkill4(HDC hDC, bossSprite bs);
-    void DrawBossSkill3(HDC hDC, bossSprite bs);
-    void DrawBossSkill2(HDC hDC, bossSprite bs);
-    void DrawBossSkill1(HDC hDC, bossSprite bs);
+    //void DrawBoss(HDC, Sprite);
+    //void DrawBossSkill4(HDC, Sprite);
+    //void DrawBossSkill3(HDC, Sprite);
+    //void DrawBossSkill2(HDC, Sprite);
+    //void DrawBossSkill1(HDC, Sprite);
 
-    void BossAlgorithm();
+    //void BossAlgorithm();
 
 public:
     typedef struct {
@@ -72,7 +71,7 @@ public:
     BOSSSKILL skill2;
     BOSSSKILL skill3;
     BOSSSKILL skill4;
-    bossSprite bs;
+
     int GetLife() const { return life; }
     void SetLife(int value) { life = value; life = max(life, 0); }
 

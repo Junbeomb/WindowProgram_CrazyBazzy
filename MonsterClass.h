@@ -10,8 +10,19 @@ public:
     int status;
     int life;
     int locatecount;
-    int anicount;
+
+    int dieCount{};
+
+    int anicount{};
+    int aniSpeed{ 5 };
 
 	void DrawMonster(HDC, HBITMAP&);
+    void InitStage1();
+
+    void SetAnim();
+    void Move();
+    bool CollisionCheck(int targetX, int targetY, int width, int height);
+    void Damaged();
+    void Die();
 };
 

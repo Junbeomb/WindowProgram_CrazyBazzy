@@ -24,7 +24,9 @@ void Widget::DrawHeart(HDC hDC, Hero hero, Boss snowBoss, Sprite os) {
     if (hero.GetLife() >= 3)
         TransparentBlt(hDC, 100, 700, 50, 50, tempDC, 0, 0, 500, 400, RGB(0, 0, 0));
 
-    if (snowBoss.GetLife() <= 0 && currentStage == 3 || (currentStage == 1 && diecount == 8) || (currentStage == 2 && diecount == 10)) {
+    //false 부분에 dieCount ==8 이런식으로 스테이지당 정해진 수 죽이면  win 나오게함.
+    //수정해야함.
+    if (snowBoss.GetLife() <= 0 && currentStage == 3 || (currentStage == 1 && false) || (currentStage == 2 && false)) {
         SelectObject(tempDC, os.win);
         TransparentBlt(hDC, 400, 300, 400, 200, tempDC, 0, 0, 600, 300, RGB(0, 0, 0));
     }

@@ -48,7 +48,7 @@ public:
     HBITMAP skill4Egg = static_cast<HBITMAP>(LoadImage(g_hinst, TEXT("BMP/egg.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION));
     HBITMAP skill4Monster = static_cast<HBITMAP>(LoadImage(g_hinst, TEXT("BMP/skill4monster.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION));
 
-    void SetgInst(HINSTANCE& h) { g_hinst = h };
+    void SetgInst(HINSTANCE& h) { g_hinst = h; };
 
 };
 

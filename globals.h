@@ -60,6 +60,5 @@
 
 static int heroSelected;
 static int currentStage; 
-static int diecount;
 
 using namespace std;
