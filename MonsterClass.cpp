@@ -22,11 +22,6 @@ void MonsterClass::DrawMonster(HDC hDC, HBITMAP& ms)
     DeleteObject(tempDC);
 }
 
-void MonsterClass::InitStage1()
-{
-   
-}
-
 void MonsterClass::SetAnim()
 {
 }

@@ -1,10 +1,9 @@
 #include "Item.h"
-#include "Sprite.h"
 
-void Item::DrawItem(HDC hDC)
+void Item::DrawItem(HDC hDC, HBITMAP& image)
 {
     HDC tempDC = CreateCompatibleDC(hDC);
-    SelectObject(tempDC, sprite);
+    SelectObject(tempDC, image);
     switch (type)
     {
     case SPEED:

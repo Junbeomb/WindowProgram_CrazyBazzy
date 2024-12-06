@@ -17,7 +17,6 @@ public:
     int aniSpeed{ 5 };
 
 	void DrawMonster(HDC, HBITMAP&);
-    void InitStage1();
 
     void SetAnim();
     void Move();

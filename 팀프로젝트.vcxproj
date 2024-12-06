@@ -147,6 +147,7 @@
     <ClCompile Include="MonsterClass.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="StageManager.cpp" />
     <ClCompile Include="Widget.cpp" />
     <ClCompile Include="팀프로젝트.cpp" />
   </ItemGroup>
@@ -160,6 +161,7 @@
     <ClInclude Include="MonsterClass.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Sprite.h" />
+    <ClInclude Include="StageManager.h" />
     <ClInclude Include="Widget.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
